@@ -10,7 +10,7 @@ local nav = component.navigation
 
 local map = {
 	fileName = "map.data",
-	yLength = 4
+	yLength = 5
 }
 
 function map:generateMap(xWide, zWide, farmLandInputBoxes)

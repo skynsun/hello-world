@@ -509,26 +509,40 @@ function Inventory:updateInventory(itemType)
 	for i=1 , robot.inventorySize() do
 	    if self.itemsBySlot[i] ~= nil then
 		    itemTypeTemp = self:determineItemType(self.itemsBySlot[i])
-		    if itemTypeTemp == itemTypes.junk or itemTypeTemp == itemTypes.cropStick then
+			if itemTypeTemp == itemTypes.junk or itemTypeTemp == itemTypes.cropStick then
 			    self:updateStack(i)
 			end
 		end
 	end
-	-- Add new item
+	--- TEST CODE ---
+	-- Update all current seeds harvested
+	if itemType ~= nil then
+	   for i, CurrentItem in ipairs(self.categorizedItems[itemType]) do
+	      item = inv.getStackInInternalSlot(CurrentItem.slot)
+		  if itemType == itemTypes.seed then
+		     numberOfSeeds = numberOfSeeds + item.size - CurrentItem.size
+		  end
+       end
+	end
+	-----------------
+	
+	-- Add new item stack
 	while not isFinish and #self.emptySlot > 0 do
 	    item = inv.getStackInInternalSlot(self.emptySlot[1])
 		if item ~= nil then
 		    itemTypeTemp = self:determineItemType(item)
 			if itemTypeTemp == itemTypes.seed then
 			    itemTypeTemp = itemType
-				numberOfSeeds = numberOfSeeds + 1
+				--numberOfSeeds = numberOfSeeds + 1
+				--- TEST CODE ---
+				numberOfSeeds = numberOfSeeds + item.size
+				--- TEST CODE ---
 			end
 			self:addItem(item, itemTypeTemp, self.emptySlot[1])
 		else
 		    isFinish = true
 		end
 	end
-	
 	return numberOfSeeds
 end
 
@@ -566,8 +580,18 @@ function Inventory:plant(itemType)
 		robot.select(self.categorizedItems[itemType][1].slot)
 		inv.equip()
 		robot.useDown()
-		self:removeFirstItemByCategory(itemType)
+		---- Current code --
+		--self:removeFirstItemByCategory(itemType)
+		--inv.equip()
+		--------------------
+		--- TEST CODE ---
 		inv.equip()
+		if inv.getStackInInternalSlot(self.categorizedItems[itemType][1].slot) ~= nil then
+		   self:updateStack(self.categorizedItems[itemType][1].slot)
+		else
+		   self:removeFirstItemByCategory(itemType)
+		end
+		-----------------
 	end
 	robot.select(1)
 	

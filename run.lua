@@ -26,6 +26,7 @@ local geo = component.geolyzer
 
 -----------------------------------------
 
+
 local mode = {searchNewSpecies = 1, 
               growWithHighStatsSeed = 3, 
 			  growWithoutHighStatsSeed = 4
@@ -368,7 +369,7 @@ function run:gatherGuideWithoutHighStatsSeed()
 	while not isChestEmpty and #self.guideNotPlanted > 0 and success do
 	    move:followPath(self.nodeTab, self.currPosition, self.posItems.seedsToGrow, self.posItems.seedsToGrow.f)
 	    isChestEmpty, self.currGrowingSeedName = self.robotInventory:pickUpNotMixedGuide()
-	
+
 	    while #self.guideNotPlanted > 0 and self.robotInventory:getGuideStack() > 0 and success do
 		    success = self:checkCropStick(1)
 			
