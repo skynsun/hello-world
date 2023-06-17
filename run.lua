@@ -38,8 +38,8 @@ local over = {seed = 1,
 			  highStatGuide = 4}
 		  
 local guideMinStat = {resistance = 4,
-                     gain = 30,
-					 growth = 20
+                     gain = 31,
+					 growth = 21
 
 }
 

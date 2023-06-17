@@ -500,7 +500,7 @@ function Inventory:suckFromGround(itemType)
 end
 
 function Inventory:updateInventory(itemType)
-    local itemTypeTemp, item, numberOfSeeds
+    local itemTypeTemp, item, previousSize, numberOfSeeds
 	local isFinish = false
 	
 	numberOfSeeds = 0
@@ -509,22 +509,15 @@ function Inventory:updateInventory(itemType)
 	for i=1 , robot.inventorySize() do
 	    if self.itemsBySlot[i] ~= nil then
 		    itemTypeTemp = self:determineItemType(self.itemsBySlot[i])
-			if itemTypeTemp == itemTypes.junk or itemTypeTemp == itemTypes.cropStick then
-			    self:updateStack(i)
+			if itemTypeTemp == itemTypes.junk or itemTypeTemp == itemTypes.cropStick or itemTypeTemp == itemTypes.seed then
+				previousSize = self.itemsBySlot[i].size
+				self:updateStack(i)
+				if itemType == itemTypes.seed and itemTypeTemp == itemTypes.seed then
+				   numberOfSeeds = numberOfSeeds + self.itemsBySlot[i].size - previousSize
+				end
 			end
 		end
 	end
-	--- TEST CODE ---
-	-- Update all current seeds harvested
-	if itemType ~= nil then
-	   for i, CurrentItem in ipairs(self.categorizedItems[itemType]) do
-	      item = inv.getStackInInternalSlot(CurrentItem.slot)
-		  if itemType == itemTypes.seed then
-		     numberOfSeeds = numberOfSeeds + item.size - CurrentItem.size
-		  end
-       end
-	end
-	-----------------
 	
 	-- Add new item stack
 	while not isFinish and #self.emptySlot > 0 do
@@ -535,7 +528,10 @@ function Inventory:updateInventory(itemType)
 			    itemTypeTemp = itemType
 				--numberOfSeeds = numberOfSeeds + 1
 				--- TEST CODE ---
-				numberOfSeeds = numberOfSeeds + item.size
+				if itemType == itemTypes.seed then
+				   numberOfSeeds = numberOfSeeds + item.size
+				   print("add="..item.size)
+				end
 				--- TEST CODE ---
 			end
 			self:addItem(item, itemTypeTemp, self.emptySlot[1])
